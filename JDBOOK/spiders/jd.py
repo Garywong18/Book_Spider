@@ -54,7 +54,8 @@ class JdSpider(scrapy.Spider):
             next_url = 'https://list.jd.com' + next_url
             yield scrapy.Request(
                 next_url,
-                callback=self.parse_list
+                callback=self.parse_list,
+                meta={'item':item}
             )
     # 获取价格
     def parse_price(self,response):
