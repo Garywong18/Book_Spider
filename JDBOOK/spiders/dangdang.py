@@ -30,6 +30,7 @@ class DangdangSpider(scrapy.Spider):
                             callback=self.parse_list,
                             meta={'item':deepcopy(item)}
                         )
+     # 解析图书列表页
     def parse_list(self,response):
         item = response.meta['item']
         book_list = response.xpath("//ul[@class='bigimg']/li")
@@ -41,13 +42,14 @@ class DangdangSpider(scrapy.Spider):
             item['price'] = li.xpath(".//span[@class='search_now_price']/text()").extract_first()
             print(item)
             yield item
+        # 翻页
         next_page = response.xpath("//li[@class='next']/a/@href").extract_first()
         if next_page is not None:
             next_page = 'http://category.dangdang.com' + next_page
             yield scrapy.Request(
                 next_page,
                 callback=self.parse_list,
-                #meta={'item':item} #此处容易忘掉传递item
+                meta={'item':item} #此处容易忘掉传递item
 
             )
 
